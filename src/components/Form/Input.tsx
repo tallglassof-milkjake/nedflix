@@ -33,7 +33,7 @@ const SearchMovies: React.FC<Props> = ({ shouldAutoFocus = false }) => {
         <div>
             <input 
                 ref={inputRef}
-                className="px-5 py-2 rounded-xl bg-transparent border border-gray-100 min-w-[300px]"
+                className="px-5 py-2 rounded-xl bg-transparent border border-gray-100 min-w-[200px]"
                 type="text" 
                 value={queryState ?? ''} 
                 onChange={(e) => handleSearch(e)} 

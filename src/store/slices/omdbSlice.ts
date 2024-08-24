@@ -1,5 +1,5 @@
 // src/store/slices/omdbSlice.ts
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import axios from 'axios';
 
@@ -8,9 +8,10 @@ interface OMDBState {
     error: string | null;
     loading: boolean;
     query: string | null;
-    filter: 'movie' | 'series' | 'episode' | null;
+    filter: 'movie' | 'series' | 'episode' | 'all';
     totalResults: number;
     page: number;
+    yearRange: [number, number]
 }
 
 const initialState: OMDBState = {
@@ -18,9 +19,10 @@ const initialState: OMDBState = {
     error: null,
     loading: false,
     query: '',
-    filter: 'movie',
+    filter: 'all',
     totalResults: 0,
     page: 1,
+    yearRange: [1970, new Date().getFullYear()]
 };
 
 export const searchMovies = createAsyncThunk(
@@ -32,10 +34,9 @@ export const searchMovies = createAsyncThunk(
         try {
             const key = import.meta.env.VITE_OMDB_API_KEY;
             let url: string = `http://www.omdbapi.com/?apikey=${key}&s=${query}&page=${page}`;
-            if (filter) {
+            if (filter && filter !== 'all') {
                 url += `&type=${filter}`;
             }
-
             const response = await axios.get(url);
             const { Search, totalResults, Response } = response.data;
             console.log(response);
@@ -69,7 +70,15 @@ const omdbSlice = createSlice({
         },
         setSearchQuery(state, action) {
             state.query = action.payload;
-        }
+        },
+        setFilter(state, action: PayloadAction<'all' | 'movie' | 'series' | 'episode'>) {
+            state.filter = action.payload;
+            state.page = 1;
+            state.searchResults = [];
+        },
+        setYearRange(state, action: PayloadAction<[number, number]>) {
+            state.yearRange = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -90,5 +99,5 @@ const omdbSlice = createSlice({
     },
 });
 
-export const { loadMore, resetSearch, setSearchQuery } = omdbSlice.actions;
+export const { loadMore, resetSearch, setSearchQuery, setFilter, setYearRange } = omdbSlice.actions;
 export default omdbSlice.reducer;

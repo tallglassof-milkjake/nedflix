@@ -12,7 +12,7 @@ function App() {
     return (
         <>
             <div className="w-screen h-screen">
-                {!searchResults.length 
+                {/* {!searchResults.length 
                 ?
                     <div className="w-fit h-full flex flex-col gap-2 m-auto justify-center">
                         <h1>
@@ -26,7 +26,10 @@ function App() {
 
                     <MainLayout />
                 </>
-                }
+                } */}
+                <NavBar />
+
+                <MainLayout />
             </div>
         </>
     )

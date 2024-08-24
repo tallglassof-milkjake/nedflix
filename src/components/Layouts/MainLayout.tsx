@@ -11,6 +11,7 @@ const MainLayout: React.FC = () => {
     const loading = useSelector((state: RootState) => state.omdb.loading);
     const totalResults = useSelector((state: RootState) => state.omdb.totalResults);
     const page = useSelector((state: RootState) => state.omdb.page);
+    const yearRange = useSelector((state: RootState) => state.omdb.yearRange);
     // const query = useSelector((state: RootState) => state.omdb.query);
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -43,14 +44,19 @@ const MainLayout: React.FC = () => {
         console.log('Handle click', id);
     }
 
+    const filteredResults = searchResults.filter((movie: Record<string, string>) => {
+        const movieYear = parseInt(movie.Year, 10);
+        return movieYear >= yearRange[0] && movieYear <= yearRange[1];
+    });
+
     return (
         <div className="flex flex-row flex-nowrap">
             <div className="w-full lg:w-1/4 lg:border-r lg:border-gray-100 px-10 py-7">
                 <p>
-                    { searchResults.length } results out of { totalResults }
+                    { filteredResults.length } results out of { totalResults }
                 </p>
                 <ul className="flex flex-col gap-6">
-                    {searchResults.map((movie: Record<string, string>, index: number) => (
+                    {filteredResults.map((movie: Record<string, string>, index: number) => (
                         <SearchResult key={index} poster={movie.Poster} title={movie.Title} year={movie.Year} handleClick={() => handleClick(movie.imdbID)} />
                     ))}
                 </ul>

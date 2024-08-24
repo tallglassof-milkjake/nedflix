@@ -1,28 +1,33 @@
 import React from "react";
 import Input from "../Form/Input";
+import Dropdown from "../Common/Dropdown";
 
 import { useSelector } from "react-redux";
 import { RootState } from '../../store/store';
 
 const NavBar: React.FC = () => {
-
     const filter = useSelector((state: RootState) => state.omdb.filter);
-
+    
     return (
-        <div className="w-full border-b border-gray-100 flex flex-row justify-between px-8 py-3">
+        <div className="w-full border-b border-gray-100 flex flex-row justify-between place-items-center px-4 py-3">
             <nav>
                 <Input shouldAutoFocus />
             </nav>
 
-            <div className="flex flex-row gap-4 place-items-center">
-                <p>
-                    Year Filter
-                </p>
+            {window.innerWidth <= 768 
+                ?
+                    <Dropdown />
+                :
+                    <div className="flex flex-row gap-4 place-items-center">
+                        <p>
+                            Year Filter
+                        </p>
 
-                <p>
-                    { filter }
-                </p>
-            </div>
+                        <p>
+                            { filter }
+                        </p>
+                    </div>
+            }
         </div>
     )
 }
