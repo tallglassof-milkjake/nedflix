@@ -9,7 +9,7 @@ const NavBar: React.FC = () => {
     const filter = useSelector((state: RootState) => state.omdb.filter);
     
     return (
-        <div className="w-full border-b border-gray-100 flex flex-row justify-between place-items-center px-4 py-3">
+        <div className="w-full border-b border-gray-300 flex flex-row justify-between place-items-center px-5 py-3">
             <nav>
                 <Input shouldAutoFocus />
             </nav>

@@ -61,7 +61,7 @@ const Dropdown: React.FC = () => {
             {
                 dropdownOpen 
                 ?
-                <div className="absolute h-full w-full top-[67px] left-0 right-0 bg-black/50 backdrop-blur">
+                <div className="absolute h-full w-full top-[67px] left-0 right-0 bg-black/75 backdrop-blur">
                     {dropdownItems.map((item, index) => (
                         <DropdownItem dropdownItem={item} key={index} />
                     ))}

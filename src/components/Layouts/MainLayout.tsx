@@ -1,24 +1,30 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store/store';
-import { searchMovies, loadMore } from '../../store/slices/omdbSlice';
+import { AppDispatch, RootState } from '../../store/store';
+import { searchMovies, searchSingleResult, loadMore, setSelectedId, clearSelected } from '../../store/slices/omdbSlice';
 
-import SearchResult from '../Cards/SearchResult';
+// Components
+import InfoLayout from './InfoLayout';
+import SearchResults from './SearchResults';
 
 const MainLayout: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
+    const [selected, setSelected] = useState<boolean>(false);
     const searchResults = useSelector((state: RootState) => state.omdb.searchResults);
     const loading = useSelector((state: RootState) => state.omdb.loading);
     const totalResults = useSelector((state: RootState) => state.omdb.totalResults);
     const page = useSelector((state: RootState) => state.omdb.page);
     const yearRange = useSelector((state: RootState) => state.omdb.yearRange);
-    // const query = useSelector((state: RootState) => state.omdb.query);
+    const query = useSelector((state: RootState) => state.omdb.query);
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
+    // TODO: pagination querying should be implemented
     useEffect(() => {
         if (page === 1) {
-            // dispatch(searchMovies(query));
+            if (query) {
+                dispatch(searchMovies(query));
+            }
         }
     }, [dispatch, page]);
 
@@ -41,7 +47,11 @@ const MainLayout: React.FC = () => {
     }, [dispatch, loading, searchResults.length, totalResults]);
 
     const handleClick = (id: string): void => {
-        console.log('Handle click', id);
+        if (id) {
+            dispatch(setSelectedId(id));
+            dispatch(searchSingleResult())
+            setSelected(true);
+        }
     }
 
     const filteredResults = searchResults.filter((movie: Record<string, string>) => {
@@ -49,20 +59,22 @@ const MainLayout: React.FC = () => {
         return movieYear >= yearRange[0] && movieYear <= yearRange[1];
     });
 
+    const handleClearSelected = (): void => {
+        dispatch(clearSelected());
+        setSelected(false);
+    }
+
     return (
         <div className="flex flex-row flex-nowrap">
-            <div className="w-full lg:w-1/4 lg:border-r lg:border-gray-100 px-10 py-7">
-                <p>
-                    { filteredResults.length } results out of { totalResults }
-                </p>
-                <ul className="flex flex-col gap-6">
-                    {filteredResults.map((movie: Record<string, string>, index: number) => (
-                        <SearchResult key={index} poster={movie.Poster} title={movie.Title} year={movie.Year} handleClick={() => handleClick(movie.imdbID)} />
-                    ))}
-                </ul>
-                { loading && <p>Loading...</p> }
-                <div ref={loadMoreRef} className="h-[20px]" />
-            </div>
+            {
+                !selected ?
+                <>
+                    <SearchResults results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} />
+                    <div ref={loadMoreRef} className="h-[20px]" />
+                </>
+                :
+                <InfoLayout onClearSelected={handleClearSelected} />
+            }
         </div>
     )
 }

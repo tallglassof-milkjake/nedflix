@@ -36,7 +36,7 @@ const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
 
     return (
         <>
-            <div className="bg-[#242424] border-b border-gray-100/25 px-4 py-6">
+            <div className="bg-white border-b border-gray-300 px-4 py-6">
                 <p className="font-semibold text-sm">
                     { dropdownItem.name }
                 </p>

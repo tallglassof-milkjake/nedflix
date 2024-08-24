@@ -10,14 +10,14 @@ interface Props {
 const SearchResult: React.FC<Props> = ({ poster, title, year, handleClick }) => {
 
     return (
-        <button onClick={handleClick} className="hover:scale-105 transition-all">
-            <li className="flex flex-row gap-4 px-5 py-3 border border-gray-100 rounded-xl">
-                <img className="w-[60px] h-[60px] object-cover" src={poster} alt={`${title} Movie poster`} />
-                <div>
-                    <h3>
+        <button onClick={handleClick} className="cursor-pointer transition-all hover:bg-gray-100">
+            <li className="flex flex-row gap-4 px-5 py-7 border-b border-gray-300">
+                <img className="h-[80px] w-[80px] shrink-0 object-cover" src={poster !== 'N/A' ? poster : 'https://placehold.co/80'} alt={`${title} Movie poster`} />
+                <div className="flex flex-col text-start">
+                    <h3 className="text-lg font-semibold">
                         { title }
                     </h3>
-                    <p>
+                    <p className="text-md font-thin">
                         { year }
                     </p>
                 </div>
