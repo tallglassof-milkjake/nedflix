@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 
+import Filter from '../../assets/svgs/filter.svg';
 import DropdownItem from './DropdownItem';
 
 const Dropdown: React.FC = () => {
     const filter = useSelector((state: RootState) => state.omdb.filter);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [dropdownItems, setDropdownItems] = useState([
+    const dropdownItems: FilterItem[] = [
         {
             id: 'type-filter',
             name: 'Type',
@@ -31,7 +32,7 @@ const Dropdown: React.FC = () => {
                 new Date().getFullYear(),
             ]
         },
-    ]);
+    ];
 
     useEffect(() => {
         if (dropdownOpen) {
@@ -54,14 +55,14 @@ const Dropdown: React.FC = () => {
         <>
             <div className="">
                 <button onClick={toggleDropdownOpen}>
-                    Open
+                    <img src={Filter} alt="" />
                 </button>
             </div>
 
             {
                 dropdownOpen 
                 ?
-                <div className="absolute h-full w-full top-[67px] left-0 right-0 bg-black/75 backdrop-blur">
+                <div className="absolute z-50 h-full w-full top-[67px] left-0 right-0 bg-black/75 backdrop-blur">
                     {dropdownItems.map((item, index) => (
                         <DropdownItem dropdownItem={item} key={index} />
                     ))}

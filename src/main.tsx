@@ -4,6 +4,12 @@ import { Provider } from 'react-redux';
 import store from './store/store.ts';
 import App from './App.tsx'
 import './index.css'
+import { loadWishlist } from './store/slices/wishlistSlice';
+
+const preloadedWishlist = store.getState().wishlist.items;
+if (preloadedWishlist) {
+    store.dispatch(loadWishlist(preloadedWishlist));
+}
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>

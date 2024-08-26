@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFilter, searchMovies } from '../../store/slices/omdbSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import Slider from '../Form/Slider';
+import RadioSelector from '../Form/RadioSelector';
 
 interface Props {
-    dropdownItem: Record<string, any>;
+    dropdownItem: FilterItem;
 }
 
 const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
@@ -13,7 +14,6 @@ const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
     const currentFilter = useSelector((state: RootState) => state.omdb.filter);
     const currentQuery = useSelector((state: RootState) => state.omdb.query);
     const currentYearRange = useSelector((state: RootState) => state.omdb.yearRange);
-    const [activeFilter, setActiveFilter] = useState(currentFilter)
 
     const isValidFilter = (value: string): value is 'all' | 'movie' | 'series' | 'episode' => {
         return ['all', 'movie', 'series', 'episode'].includes(value);
@@ -44,16 +44,7 @@ const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
                 {
                     dropdownItem.id === 'type-filter'
                     ?
-                        <div className="flex flex-row flex-wrap gap-2">
-                            {dropdownItem.options.map((option: string, index: number) => (
-                                <div className="flex flex-row gap-2 place-items-center" key={index}>
-                                    <input type="radio" value={option.toString()} checked={option === currentFilter} onChange={(e) => handleSelect(e)} />
-                                    <p className={option === currentFilter ? 'font-semibold text-red-500' : ''}>
-                                        {option}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
+                        <RadioSelector item={dropdownItem} currentFilter={currentFilter} handleSelect={(e) => handleSelect(e)} />
                     :
                         <Slider minYear={1970} maxYear={new Date().getFullYear()} currentQuery={currentYearRange} />
                 }

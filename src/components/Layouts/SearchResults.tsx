@@ -7,13 +7,13 @@ interface Props {
     totalResults: number;
     loading: boolean;
     handleClick: (id: string) => void;
+    children?: React.ReactNode;
 }
 
-const SearchResults: React.FC<Props> = ({results, totalResults, loading, handleClick}) => {
-
+const SearchResults: React.FC<Props> = ({results, totalResults, loading, handleClick, children}) => {
     return (
         <>
-            <div className="w-full lg:w-1/4 lg:border-r lg:border-gray-100 py-7">
+            <div className="w-full shrink-0 lg:w-1/3 lg:border-r lg:border-gray-300 py-7 h-full max-h-full overflow-auto">
                 <p className="pb-7 px-5 text-sm font-black border-b border-gray-300">
                     { totalResults } RESULTS
                 </p>
@@ -23,6 +23,8 @@ const SearchResults: React.FC<Props> = ({results, totalResults, loading, handleC
                     ))}
                 </ul>
                 { loading && <p>Loading...</p> }
+
+                { children }
             </div>
         </>
     );

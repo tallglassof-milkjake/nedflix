@@ -1,4 +1,3 @@
-// src/store/slices/omdbSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import axios from 'axios';
@@ -74,7 +73,7 @@ export const searchSingleResult = createAsyncThunk(
         try {
             // Make the API call using the selectedId from state
             const key = import.meta.env.VITE_OMDB_API_KEY;
-            const response = await axios.get(`http://www.omdbapi.com/?apikey=${key}&i=${selectedId}`);
+            const response = await axios.get(`http://www.omdbapi.com/?apikey=${key}&i=${selectedId}&plot=full`);
             console.log(response);
             const { Response } = response.data;
 

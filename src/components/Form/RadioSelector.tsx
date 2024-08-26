@@ -1,0 +1,25 @@
+import React from 'react';
+
+interface Props {
+    item: FilterItem;
+    currentFilter: string;
+    handleSelect: (event:React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const RadioSelector: React.FC<Props> = ({item, currentFilter, handleSelect}) => {
+
+    return (
+        <div className="flex flex-row flex-wrap gap-2">
+            {item.options.map((option: string | number, index: number) => (
+                <div className="flex flex-row gap-2 place-items-center" key={index}>
+                    <input type="radio" value={option.toString()} checked={option === currentFilter} onChange={(e) => handleSelect(e)} />
+                    <p className={option === currentFilter ? 'font-semibold text-red-500' : ''}>
+                        {option}
+                    </p>
+                </div>
+            ))}
+        </div>
+    )
+};
+
+export default RadioSelector;

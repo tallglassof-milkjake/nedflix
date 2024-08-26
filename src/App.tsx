@@ -11,7 +11,7 @@ function App() {
 
     return (
         <>
-            <div className="w-screen h-screen">
+            <div className="max-w-screen w-screen max-h-screen h-screen">
                 {/* {!searchResults.length 
                 ?
                     <div className="w-fit h-full flex flex-col gap-2 m-auto justify-center">

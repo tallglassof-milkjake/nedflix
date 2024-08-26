@@ -9,6 +9,7 @@ import SearchResults from './SearchResults';
 
 const MainLayout: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const [isMobile, setIsMobile] = useState<boolean>(false);
     const [selected, setSelected] = useState<boolean>(false);
     const searchResults = useSelector((state: RootState) => state.omdb.searchResults);
     const loading = useSelector((state: RootState) => state.omdb.loading);
@@ -18,6 +19,16 @@ const MainLayout: React.FC = () => {
     const query = useSelector((state: RootState) => state.omdb.query);
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+    const checkScreenWidth = (width: number): boolean => width <= 768;
+
+    useEffect(() => {
+        const screenWidth:number = window.innerWidth;
+        console.log(screenWidth);
+        setIsMobile(checkScreenWidth(screenWidth));
+
+        window.addEventListener("resize", () => setIsMobile(checkScreenWidth(screenWidth)));
+    }, [isMobile]);
 
     // TODO: pagination querying should be implemented
     useEffect(() => {
@@ -65,17 +76,31 @@ const MainLayout: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-row flex-nowrap">
+        <>
             {
-                !selected ?
-                <>
-                    <SearchResults results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} />
-                    <div ref={loadMoreRef} className="h-[20px]" />
-                </>
+                isMobile ? 
+                    <div className="flex flex-row flex-nowrap overflow-hidden h-full" style={{maxHeight: 'calc(100vh - 80px)',}}>
+                        {
+                            !selected ?
+                            <>
+                                <SearchResults results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} >
+                                    <div ref={loadMoreRef} className="h-[20px]" />
+                                </SearchResults>
+                                {/* <InfoLayout onClearSelected={handleClearSelected} /> */}
+                            </>
+                            :
+                            <InfoLayout onClearSelected={handleClearSelected} />
+                        }
+                    </div>
                 :
-                <InfoLayout onClearSelected={handleClearSelected} />
+                    <div className="flex flex-row flex-nowrap overflow-hidden h-full" style={{maxHeight: 'calc(100vh - 80px)',}}>
+                        <SearchResults results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} >
+                            <div ref={loadMoreRef} className="h-[20px]" />
+                        </SearchResults>
+                        <InfoLayout onClearSelected={handleClearSelected} />
+                    </div>
             }
-        </div>
+        </>
     )
 }
 
