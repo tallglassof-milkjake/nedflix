@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import Input from './components/Form/Input';
 import NavBar from './components/Navigation/NavBar';
 import MainLayout from './components/Layouts/MainLayout';
@@ -8,6 +9,10 @@ function App() {
     const searchResults = useSelector((state: RootState) => state.omdb.searchResults);
     const loading = useSelector((state: RootState) => state.omdb.loading);
     const error = useSelector((state: RootState) => state.omdb.error);
+
+    useEffect(()=>{
+        console.log(searchResults);
+    },[searchResults])
 
     return (
         <>

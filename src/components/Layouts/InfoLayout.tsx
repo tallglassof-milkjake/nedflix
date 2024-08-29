@@ -29,7 +29,7 @@ const InfoLayout: React.FC<Props> = ({onClearSelected}) => {
     }
 
     return (
-        <div className="relative w-full lg:h-full lg:flex flex-col overflow-auto">
+        <div className="relative w-full lg:h-full lg:flex flex-col overflow-auto bg-slate-100">
             {
                 selectedResult 
                 ?
@@ -46,7 +46,7 @@ const InfoLayout: React.FC<Props> = ({onClearSelected}) => {
                                     <img className="min-w-[300px] mx-auto lg:mx-0" src={selectedResult?.Poster} alt="" />
                                 </div>
                                 <div className="flex flex-auto flex-col px-2 py-4 gap-4">
-                                    <button className={`absolute lg:static w-[40px] lg:ml-auto lg:max-w-fit lg:w-full h-[40px] flex place-items-center justify-center top-4 right-4 px-1 lg:px-7 py-1 border border-gray-600 rounded-full lg:rounded-md transition-all shadow-md hover:shadow-lg hover:bg-gray-100 ${isWishlisted ? 'bg-yellow-300' : 'bg-white'}`} onClick={handleBookmark}>
+                                    <button className={`absolute lg:static w-[40px] lg:ml-auto lg:max-w-fit lg:w-full h-[40px] flex place-items-center justify-center top-4 right-4 px-1 lg:px-7 py-1 border border-gray-600 rounded-full lg:rounded-md transition-all shadow-md hover:shadow-lg hover:bg-gray-100 ${isWishlisted ? 'bg-gray-200' : 'bg-white'}`} onClick={handleBookmark}>
                                         <img className="w-[18px]" src={Bookmark} alt="" /> 
                                         <p className="hidden lg:flex">
                                             Watchlist

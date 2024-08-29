@@ -30,19 +30,24 @@ const initialState: OMDBState = {
 
 export const searchMovies = createAsyncThunk(
     'omdb/searchMovies',
-    async (query: string, { getState, rejectWithValue }) => {
+    async ({query, page}: {query: string, page: number }, { getState, rejectWithValue }) => {
         const state = getState() as RootState;
-        const { page, filter } = state.omdb;
+        const { filter } = state.omdb;
         
         try {
             const key = import.meta.env.VITE_OMDB_API_KEY;
+
+            if (!query) return rejectWithValue('No query provided');
+            
             let url: string = `http://www.omdbapi.com/?apikey=${key}&s=${query}&page=${page}`;
+            
             if (filter && filter !== 'all') {
                 url += `&type=${filter}`;
             }
+            
             const response = await axios.get(url);
             const { Search, totalResults, Response } = response.data;
-            // console.log(response);
+            
             if (Response === 'False') {
                 return rejectWithValue('No results found');
             }
@@ -50,7 +55,6 @@ export const searchMovies = createAsyncThunk(
             return {
                 searchResults: Search,
                 totalResults: parseInt(totalResults, 10),
-                page,
             };
         } catch (error: any) {
             return rejectWithValue(error.message);
@@ -74,7 +78,7 @@ export const searchSingleResult = createAsyncThunk(
             // Make the API call using the selectedId from state
             const key = import.meta.env.VITE_OMDB_API_KEY;
             const response = await axios.get(`http://www.omdbapi.com/?apikey=${key}&i=${selectedId}&plot=full`);
-            console.log(response);
+            // console.log(response);
             const { Response } = response.data;
 
             if (Response === 'False') {
@@ -95,6 +99,9 @@ const omdbSlice = createSlice({
         loadMore(state) {
             state.page += 1;
         },
+        setSearchList(state, action) {
+            state.searchResults = action.payload;
+        },
         resetSearch(state) {
             state.searchResults = [];
             state.totalResults = 0;
@@ -103,6 +110,9 @@ const omdbSlice = createSlice({
         },
         setSearchQuery(state, action) {
             state.query = action.payload;
+            state.totalResults = action.payload.totalResults;
+            state.loading = false;
+            state.page += 1;
         },
         setFilter(state, action: PayloadAction<'all' | 'movie' | 'series' | 'episode'>) {
             state.filter = action.payload;
@@ -125,7 +135,10 @@ const omdbSlice = createSlice({
         .addCase(searchMovies.pending, (state, action) => {
             state.loading = true;
             state.error = null;
-            state.query = action.meta.arg;
+            if (action.meta.arg.page === 1) {
+                state.query = action.meta.arg.query;
+                state.searchResults = [];
+            }
         })
         .addCase(searchMovies.fulfilled, (state, action) => {
             state.searchResults = [...state.searchResults, ...action.payload.searchResults];
@@ -143,7 +156,7 @@ const omdbSlice = createSlice({
         .addCase(searchSingleResult.fulfilled, (state, action) => {
             // Handle successful result
             state.loading = false;
-            console.log(action.payload);
+            // console.log(action.payload);
             state.selectedResult = action.payload; // Assuming you have a selectedResult in your state
         })
         .addCase(searchSingleResult.rejected, (state, action) => {
@@ -154,5 +167,5 @@ const omdbSlice = createSlice({
     },
 });
 
-export const { loadMore, resetSearch, setSearchQuery, setFilter, setYearRange, setSelectedId, clearSelected } = omdbSlice.actions;
+export const { loadMore, resetSearch, setSearchQuery, setFilter, setYearRange, setSelectedId, clearSelected, setSearchList } = omdbSlice.actions;
 export default omdbSlice.reducer;

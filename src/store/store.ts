@@ -36,6 +36,7 @@ const store = configureStore({
         omdb: omdbReducer,
         wishlist: wishlistReducer,
     },
+    preloadedState
 });
 
 store.subscribe(() => {

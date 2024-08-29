@@ -12,6 +12,7 @@ interface Props {
 const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
     const dispatch = useDispatch<AppDispatch>();
     const currentFilter = useSelector((state: RootState) => state.omdb.filter);
+    const page = useSelector((state: RootState) => state.omdb.page);
     const currentQuery = useSelector((state: RootState) => state.omdb.query);
     const currentYearRange = useSelector((state: RootState) => state.omdb.yearRange);
 
@@ -30,7 +31,10 @@ const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
 
     useEffect(() => {
         if (dropdownItem.id === 'type-filter' && currentQuery) {
-            dispatch(searchMovies(currentQuery));
+            const query = currentQuery;
+            if (query) {
+                dispatch(searchMovies({query, page}));
+            }
         }
     }, [currentFilter, currentQuery, dropdownItem.id, dispatch]);
 

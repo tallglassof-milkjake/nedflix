@@ -6,7 +6,7 @@ interface Wishlist {
 }
 
 const initialState: Wishlist = {
-    items: [],
+    items: JSON.parse(localStorage.getItem('wishlist') || '[]'),
 };
 
 const wishlistSlice = createSlice({
@@ -19,13 +19,16 @@ const wishlistSlice = createSlice({
 
             if (!existingItem) {
                 state.items.push(newItem);
+                localStorage.setItem('wishlist', JSON.stringify(state.items));
             }
         },
         removeFromWishlist(state, action: PayloadAction<string>) {
             state.items = state.items.filter((item: any) => item.imdbID !== action.payload);
+            localStorage.setItem('wishlist', JSON.stringify(state.items));
         },
-        loadWishlist(state, action: PayloadAction<Record<string, any>>) {
-            state.items = action.payload;
+        loadWishlist(state) {
+            const savedWishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            state.items = savedWishlist;
         },
     },
 });

@@ -11,6 +11,8 @@ const MainLayout: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [selected, setSelected] = useState<boolean>(false);
+    const [fetching, setFetching] = useState<boolean>(false);
+    const [filteredResults, setFilteredResults] = useState<Record<string, any>[]>([]);
     const searchResults = useSelector((state: RootState) => state.omdb.searchResults);
     const loading = useSelector((state: RootState) => state.omdb.loading);
     const totalResults = useSelector((state: RootState) => state.omdb.totalResults);
@@ -24,25 +26,19 @@ const MainLayout: React.FC = () => {
 
     useEffect(() => {
         const screenWidth:number = window.innerWidth;
-        console.log(screenWidth);
         setIsMobile(checkScreenWidth(screenWidth));
 
         window.addEventListener("resize", () => setIsMobile(checkScreenWidth(screenWidth)));
     }, [isMobile]);
 
-    // TODO: pagination querying should be implemented
-    useEffect(() => {
-        if (page === 1) {
-            if (query) {
-                dispatch(searchMovies(query));
-            }
-        }
-    }, [dispatch, page]);
-
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && !loading && searchResults.length < totalResults) {
-                dispatch(loadMore());
+            if (entries[0].isIntersecting && !loading && !fetching && searchResults.length < totalResults) {
+                if (query) {
+                    setFetching(true);
+                    dispatch(loadMore());
+                    dispatch(searchMovies({ query, page: page + 1 })).finally(() => setFetching(false));
+                }
             }
         }, { threshold: 1.0 });
 
@@ -55,7 +51,14 @@ const MainLayout: React.FC = () => {
                 observer.unobserve(loadMoreRef.current);
             }
         };
-    }, [dispatch, loading, searchResults.length, totalResults]);
+    }, [dispatch, loading, searchResults.length, totalResults, query, page, fetching]);
+
+    useEffect(() => {
+        setFilteredResults(searchResults.filter((movie: Record<string, string>) => {
+            const movieYear = parseInt(movie.Year, 10);
+            return movieYear >= yearRange[0] && movieYear <= yearRange[1];
+        }))
+    }, [searchResults, ]);
 
     const handleClick = (id: string): void => {
         if (id) {
@@ -64,11 +67,6 @@ const MainLayout: React.FC = () => {
             setSelected(true);
         }
     }
-
-    const filteredResults = searchResults.filter((movie: Record<string, string>) => {
-        const movieYear = parseInt(movie.Year, 10);
-        return movieYear >= yearRange[0] && movieYear <= yearRange[1];
-    });
 
     const handleClearSelected = (): void => {
         dispatch(clearSelected());
@@ -86,7 +84,6 @@ const MainLayout: React.FC = () => {
                                 <SearchResults results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} >
                                     <div ref={loadMoreRef} className="h-[20px]" />
                                 </SearchResults>
-                                {/* <InfoLayout onClearSelected={handleClearSelected} /> */}
                             </>
                             :
                             <InfoLayout onClearSelected={handleClearSelected} />
