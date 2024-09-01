@@ -9,4 +9,11 @@ declare global {
         value: string | number[];
         options: string[] | number[];
     }
+
+    // Icon props
+    interface IconProps {
+        stroke?: string;
+        fill?: string;
+        size?: string;
+    }
 }

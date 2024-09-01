@@ -128,6 +128,9 @@ const omdbSlice = createSlice({
         clearSelected(state) {
             state.selectedId = null;
             state.selectedResult = null;
+        },
+        updateTotalResults(state, action: PayloadAction<number>) {
+            state.totalResults = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -141,7 +144,11 @@ const omdbSlice = createSlice({
             }
         })
         .addCase(searchMovies.fulfilled, (state, action) => {
-            state.searchResults = [...state.searchResults, ...action.payload.searchResults];
+            if (state.page === 1) {
+                state.searchResults = action.payload.searchResults;
+            } else {
+                state.searchResults = [...state.searchResults, ...action.payload.searchResults];
+            }
             state.totalResults = action.payload.totalResults;
             state.loading = false;
         })
@@ -167,5 +174,5 @@ const omdbSlice = createSlice({
     },
 });
 
-export const { loadMore, resetSearch, setSearchQuery, setFilter, setYearRange, setSelectedId, clearSelected, setSearchList } = omdbSlice.actions;
+export const { loadMore, resetSearch, setSearchQuery, setFilter, setYearRange, setSelectedId, clearSelected, setSearchList, updateTotalResults } = omdbSlice.actions;
 export default omdbSlice.reducer;

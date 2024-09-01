@@ -32,6 +32,7 @@ const MainLayout: React.FC = () => {
     }, [isMobile]);
 
     useEffect(() => {
+        console.log(totalResults);
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting && !loading && !fetching && searchResults.length < totalResults) {
                 if (query) {

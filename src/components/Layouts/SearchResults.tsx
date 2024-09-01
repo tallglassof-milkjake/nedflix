@@ -1,7 +1,4 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearSelected, resetSearch } from '../../store/slices/omdbSlice';
-import { AppDispatch, RootState } from '../../store/store';
 
 import SearchResult from '../Cards/SearchResult';
 
@@ -14,15 +11,6 @@ interface Props {
 }
 
 const SearchResults: React.FC<Props> = ({results, totalResults, loading, handleClick, children}) => {
-    const dispatch = useDispatch<AppDispatch>();
-    const searchResults = useSelector((state: RootState) => state.omdb.searchResults);
-    const onClear = () => {
-        console.log(searchResults.length);
-        if (searchResults.length > 0) {
-            dispatch(clearSelected());
-            dispatch(resetSearch());
-        }
-    }
 
     return (
         <>
@@ -31,10 +19,6 @@ const SearchResults: React.FC<Props> = ({results, totalResults, loading, handleC
                     <p className="text-sm font-black">
                         { totalResults } RESULTS
                     </p>
-
-                    <button className="px-7 py-1 rounded-lg bg-slate-400 hover:bg-slate-500 font-semibold text-white" onClick={onClear}>
-                        Clear
-                    </button>
                 </div>
                 <div>
                     <ul className="flex flex-col">

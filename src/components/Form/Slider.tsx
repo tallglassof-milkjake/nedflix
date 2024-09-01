@@ -17,6 +17,21 @@ const YearRangeSlider: React.FC<YearRangeSliderProps> = ({ minYear, maxYear, cur
     const storeQuery = useSelector((state: RootState) => state.omdb.query);
     const page = useSelector((state: RootState) => state.omdb.page);
 
+    const sliderStyles = { 
+        track: { 
+            backgroundColor: '#d97706' 
+        }, 
+        handle: { 
+            borderColor: '#f59e0b', 
+            backgroundColor: '#d97706', 
+            opacity: 1 
+        },
+        rail: {
+            backgroundColor: 'gray',
+            width: '120px',
+        }
+    };
+
     const handleYearChange = (values: [number, number]) => {
         setYearRangeState(values);
     };
@@ -32,23 +47,20 @@ const YearRangeSlider: React.FC<YearRangeSliderProps> = ({ minYear, maxYear, cur
     return (
         <div className="flex flex-col p-4">
             <label className="font-semibold text-sm text-gray-100 uppercase">Year</label>
-            <div className="flex justify-between place-items-center w-full min-w-[220px]">
-                <span className="font-light text-gray-100">{yearRange[0]}</span>
-                <div className="min-w-[120px]">
+            <div className="flex gap-2 justify-between place-items-center w-full min-w-[220px]">
+                <span className="flex-none font-light text-gray-100">{yearRange[0]}</span>
+                <div className="min-w-[120px] w-[120px]">
                     <Slider
                         range
+                        className="w-[120px]"
                         min={minYear}
                         max={maxYear}
                         value={yearRange}
                         onChange={(values) => handleYearChange(values as [number, number])}
-                        trackStyle={[{ backgroundColor: 'gray' }]}
-                        handleStyle={[
-                            { borderColor: 'gray' },
-                            { borderColor: 'gray' }
-                        ]}
+                        styles={sliderStyles}
                     />
                 </div>
-                <span className="font-light text-gray-100">{yearRange[1]}</span>
+                <span className="flex-none font-light text-gray-100">{yearRange[1]}</span>
             </div>
         </div>
     );

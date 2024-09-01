@@ -7,7 +7,7 @@ import Bookmark from '../../assets/svgs/bookmark.svg';
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from '../../store/store';
-import { setSearchList } from '../../store/slices/omdbSlice';
+import { setSearchList, resetSearch, updateTotalResults } from '../../store/slices/omdbSlice';
 
 const NavBar: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -15,7 +15,12 @@ const NavBar: React.FC = () => {
     const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
 
     const handleClick = () => {
-        dispatch(setSearchList(wishlistItems));
+        // clear search list
+        dispatch(resetSearch());
+        setTimeout(() => {
+            dispatch(setSearchList(wishlistItems));
+            dispatch(updateTotalResults(wishlistItems.length));
+        }, 550);
     }
 
     return (

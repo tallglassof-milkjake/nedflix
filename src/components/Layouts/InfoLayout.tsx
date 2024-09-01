@@ -5,7 +5,7 @@ import { addToWishlist, removeFromWishlist } from '../../store/slices/wishlistSl
 
 // Icons & Components
 import ChevronLeft from '../../assets/svgs/chevron-left.svg';
-import Bookmark from '../../assets/svgs/bookmark.svg';
+import Bookmark from '../Icons/Bookmark';
 
 interface Props {
     onClearSelected: () => void;
@@ -46,8 +46,9 @@ const InfoLayout: React.FC<Props> = ({onClearSelected}) => {
                                     <img className="min-w-[300px] mx-auto lg:mx-0" src={selectedResult?.Poster} alt="" />
                                 </div>
                                 <div className="flex flex-auto flex-col px-2 py-4 gap-4">
-                                    <button className={`absolute lg:static w-[40px] lg:ml-auto lg:max-w-fit lg:w-full h-[40px] flex place-items-center justify-center top-4 right-4 px-1 lg:px-7 py-1 border border-gray-600 rounded-full lg:rounded-md transition-all shadow-md hover:shadow-lg hover:bg-gray-100 ${isWishlisted ? 'bg-gray-200' : 'bg-white'}`} onClick={handleBookmark}>
-                                        <img className="w-[18px]" src={Bookmark} alt="" /> 
+                                    <button className={`absolute lg:static w-[40px] lg:ml-auto lg:max-w-fit lg:w-full h-[40px] flex gap-2 place-items-center justify-center top-4 right-4 px-1 lg:px-7 py-1 border border-gray-600 rounded-full lg:rounded-md transition-all shadow-md hover:shadow-lg hover:bg-gray-100 ${isWishlisted ? 'bg-gray-200' : 'bg-white'}`} onClick={handleBookmark}>
+                                        <Bookmark size="18" stroke="#213547" fill={isWishlisted ? "#213547" : ""} />
+                                        {/* <img className="w-[18px]" src={Bookmark} alt="" />  */}
                                         <p className="hidden lg:flex">
                                             Watchlist
                                         </p>
