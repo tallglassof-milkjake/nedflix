@@ -13,6 +13,10 @@
   - `Year` Year ascending order, click again to sort by year descending
 - It was built mobile first, although was only tested using browser dev tools mobile viewport
 
+## Requirements
+- Nodejs and npm
+- Text editor or IDE
+
 ## Install
 1. Pull the repo
 2. Create a `.env` file and apply the omdb API key as `VITE_OMDB_API_KEY = [your key]`
