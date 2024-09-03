@@ -9,7 +9,7 @@ interface Props {
 const RadioSelector: React.FC<Props> = ({item, currentFilter, handleSelect}) => {
 
     return (
-        <div className="flex flex-row flex-wrap gap-2">
+        <div className="flex flex-row lg:flex-no-wrap gap-2">
             {item.options.map((option: string | number, index: number) => (
                 <div className="flex flex-row gap-2 place-items-center" key={index}>
                     <input id={`radio-${option}-${index}`} type="radio" className="accent-amber-500" value={option.toString()} checked={option === currentFilter} onChange={(e) => handleSelect(e)} />

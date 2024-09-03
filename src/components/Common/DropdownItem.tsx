@@ -21,7 +21,6 @@ const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
     };
 
     const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('Select filter', event.target.value);
         const selectedValue = event.target.value;
 
         if (dropdownItem.id === 'type-filter' && isValidFilter(selectedValue)) {

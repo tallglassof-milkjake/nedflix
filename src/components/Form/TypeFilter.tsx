@@ -27,7 +27,6 @@ const TypeFIlter: React.FC = () => {
     };
 
     const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('Select filter', event.target.value);
         const selectedValue = event.target.value;
 
         if (typeFilterOptions.id === 'type-filter' && isValidFilter(selectedValue)) {

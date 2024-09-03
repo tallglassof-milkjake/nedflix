@@ -4,40 +4,13 @@ import { RootState } from '../../store/store';
 
 import Slider from '../Form/Slider';
 import TypeFilter from '../Form/TypeFilter';
-import Filter from '../../assets/svgs/filter.svg';
-import DropdownItem from './DropdownItem';
+import FilterIcon from "../Icons/Filter";
 
 const Dropdown: React.FC = () => {
     const filter = useSelector((state: RootState) => state.omdb.filter);
     const currentYearRange = useSelector((state: RootState) => state.omdb.yearRange);
     
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    
-    // const dropdownItems: FilterItem[] = [
-    //     {
-    //         id: 'type-filter',
-    //         name: 'Type',
-    //         value: filter,
-    //         options: [
-    //             'all',
-    //             'movie',
-    //             'series',
-    //             'episode',
-    //         ]
-    //     },
-    //     {
-    //         id: 'year-filter',
-    //         name: 'Year',
-    //         value: [
-    //             1970,
-    //             new Date().getFullYear(),
-    //         ],
-    //         options: [
-    //             1970,
-    //             new Date().getFullYear(),
-    //         ]
-    //     },
-    // ];
 
     useEffect(() => {
         if (dropdownOpen) {
@@ -58,28 +31,21 @@ const Dropdown: React.FC = () => {
 
     return (
         <>
-            <div className="">
-                <button onClick={toggleDropdownOpen}>
-                    <img src={Filter} alt="" />
+            <div className="shrink-0 flex place-items-center ml-2">
+                <button className="bg-transparent w-[44px] h-[44px] flex place-items-center justify-center" onClick={toggleDropdownOpen}>
+                    <FilterIcon size="26" />
                 </button>
             </div>
 
             {
                 dropdownOpen 
-                ?
-                <div className="absolute z-50 w-full h-full top-[67px] left-0 right-0 bg-black/75 backdrop-blur">
-                    <div className="flex flex-col bg-white border-b border-gray-300 px-4 py-6">
+                &&
+                <div className="absolute z-50 w-full h-full top-[80px] left-0 right-0 bg-black/75 backdrop-blur">
+                    <div className="flex flex-col bg-slate-900 border-t border-slate-700 px-4 py-6">
                         <Slider minYear={1970} maxYear={new Date().getFullYear()} currentQuery={currentYearRange} />
                         <TypeFilter />
                     </div>
                 </div>
-                // <div className="absolute z-50 h-full w-full top-[67px] left-0 right-0 bg-black/75 backdrop-blur">
-                //     {dropdownItems.map((item, index) => (
-                //         <DropdownItem dropdownItem={item} key={index} />
-                //     ))}
-                // </div>
-                :
-                <></>
             }
         </>
     )

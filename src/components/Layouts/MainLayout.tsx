@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { searchMovies, searchSingleResult, loadMore, setSelectedId, clearSelected } from '../../store/slices/omdbSlice';
+import { searchMovies, searchSingleResult, loadMore, setSelectedId, clearSelected, fetchEpisode } from '../../store/slices/omdbSlice';
 
 // Components
 import InfoLayout from './InfoLayout';
@@ -12,13 +12,18 @@ const MainLayout: React.FC = () => {
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [selected, setSelected] = useState<boolean>(false);
     const [fetching, setFetching] = useState<boolean>(false);
+    const [noResults, setNoResults] = useState<boolean>(false);
     const [filteredResults, setFilteredResults] = useState<Record<string, any>[]>([]);
     const searchResults = useSelector((state: RootState) => state.omdb.searchResults);
     const loading = useSelector((state: RootState) => state.omdb.loading);
     const totalResults = useSelector((state: RootState) => state.omdb.totalResults);
     const page = useSelector((state: RootState) => state.omdb.page);
     const yearRange = useSelector((state: RootState) => state.omdb.yearRange);
+    const filter = useSelector((state: RootState) => state.omdb.filter);
     const query = useSelector((state: RootState) => state.omdb.query);
+    const sort = useSelector((state: RootState) => state.omdb.sort);
+    const storeError = useSelector((state: RootState) => state.omdb.error);
+    const selectedResult = useSelector((state: RootState) => state.omdb.selectedResult);
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -32,13 +37,13 @@ const MainLayout: React.FC = () => {
     }, [isMobile]);
 
     useEffect(() => {
-        console.log(totalResults);
         const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && !loading && !fetching && searchResults.length < totalResults) {
+            if (entries[0].isIntersecting && !loading && !fetching && searchResults.length < totalResults && !storeError) {
                 if (query) {
                     setFetching(true);
                     dispatch(loadMore());
-                    dispatch(searchMovies({ query, page: page + 1 })).finally(() => setFetching(false));
+                    dispatch(searchMovies({ query, page: page + 1 }))
+                    .finally(() => setFetching(false));
                 }
             }
         }, { threshold: 1.0 });
@@ -52,19 +57,65 @@ const MainLayout: React.FC = () => {
                 observer.unobserve(loadMoreRef.current);
             }
         };
-    }, [dispatch, loading, searchResults.length, totalResults, query, page, fetching]);
+    }, [dispatch, loading, searchResults.length, totalResults, query, page, fetching, storeError]);
 
     useEffect(() => {
-        setFilteredResults(searchResults.filter((movie: Record<string, string>) => {
-            const movieYear = parseInt(movie.Year, 10);
-            return movieYear >= yearRange[0] && movieYear <= yearRange[1];
-        }))
-    }, [searchResults, ]);
+        if (searchResults.length === 0) {
+            setNoResults(true);
+            setFilteredResults([]);
+            return;
+        }
+        
+        const filtered = searchResults.filter((movie: Record<string, string>) => {
+            let movieYear = null;
 
-    const handleClick = (id: string): void => {
+            if (movie.Year) {
+                movieYear = parseInt(movie.Year, 10);
+            } else if (movie.Released) {
+                const releaseDate = new Date(movie.Released);
+                movieYear = releaseDate.getFullYear();
+            }
+
+            const isYearInRange = movieYear !== null && movieYear >= yearRange[0] && movieYear <= yearRange[1];
+            const isTypeMatch = filter === 'all' || (movie.Type ? movie.Type === filter : (filter === 'episode' || filter === 'series'));
+            return isYearInRange && isTypeMatch;
+        });
+        setNoResults(filtered.length === 0);
+
+        switch (sort) {
+            case 'alphaAsc':
+                filtered.sort((a, b) => a.Title.localeCompare(b.Title));
+                break;
+            case 'alphaDesc':
+                filtered.sort((a, b) => b.Title.localeCompare(a.Title));
+                break;
+            case 'yearAsc':
+                filtered.sort((a, b) => parseInt(a.Year, 10) - parseInt(b.Year, 10));
+                break;
+            case 'yearDesc':
+                filtered.sort((a, b) => parseInt(b.Year, 10) - parseInt(a.Year, 10));
+                break;
+            case 'none':
+                // No sorting, keep the original order
+                break;
+            default:
+                break;
+        }
+
+        setFilteredResults(filtered);
+    }, [searchResults, sort, yearRange, filter]);
+
+    const handleClick = (movie: Record<string, any>): void => {
+        let id: string = movie.imdbID;
+
         if (id) {
             dispatch(setSelectedId(id));
-            dispatch(searchSingleResult())
+            if (movie.Type && movie.Type !== 'episode') {
+                dispatch(searchSingleResult())
+            } else {
+                // Handle load a particular episode here
+                dispatch(fetchEpisode({ episode: movie.Episode, season: movie.Season }))
+            }
             setSelected(true);
         }
     }
@@ -81,18 +132,16 @@ const MainLayout: React.FC = () => {
                     <div className="flex flex-row flex-nowrap overflow-hidden h-full" style={{maxHeight: 'calc(100vh - 80px)',}}>
                         {
                             !selected ?
-                            <>
-                                <SearchResults results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} >
+                                <SearchResults noResults={noResults} results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} >
                                     <div ref={loadMoreRef} className="h-[20px]" />
                                 </SearchResults>
-                            </>
                             :
-                            <InfoLayout onClearSelected={handleClearSelected} />
+                                <InfoLayout onClearSelected={handleClearSelected} />
                         }
                     </div>
                 :
                     <div className="flex flex-row flex-nowrap overflow-hidden h-full" style={{maxHeight: 'calc(100vh - 80px)',}}>
-                        <SearchResults results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} >
+                        <SearchResults noResults={noResults} results={filteredResults} totalResults={totalResults} loading={loading} handleClick={handleClick} >
                             <div ref={loadMoreRef} className="h-[20px]" />
                         </SearchResults>
                         <InfoLayout onClearSelected={handleClearSelected} />

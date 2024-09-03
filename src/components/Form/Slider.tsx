@@ -28,7 +28,7 @@ const YearRangeSlider: React.FC<YearRangeSliderProps> = ({ minYear, maxYear, cur
         },
         rail: {
             backgroundColor: 'gray',
-            width: '120px',
+            width: '100%',
         }
     };
 
@@ -49,10 +49,10 @@ const YearRangeSlider: React.FC<YearRangeSliderProps> = ({ minYear, maxYear, cur
             <label className="font-semibold text-sm text-gray-100 uppercase">Year</label>
             <div className="flex gap-2 justify-between place-items-center w-full min-w-[220px]">
                 <span className="flex-none font-light text-gray-100">{yearRange[0]}</span>
-                <div className="min-w-[120px] w-[120px]">
+                <div className="min-w-[180px] flex lg:min-w-[120px] w-full">
                     <Slider
                         range
-                        className="w-[120px]"
+                        className="w-full mx-[24px] lg:mx-[10px]"
                         min={minYear}
                         max={maxYear}
                         value={yearRange}

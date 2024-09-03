@@ -4,6 +4,7 @@ import Dropdown from "../Common/Dropdown";
 import TypeFilter from "../Form/TypeFilter";
 import Slider from '../Form/Slider';
 import Bookmark from '../../assets/svgs/bookmark.svg';
+import BookmarkIcon from '../Icons/Bookmark';
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from '../../store/store';
@@ -18,20 +19,18 @@ const NavBar: React.FC = () => {
         // clear search list
         dispatch(resetSearch());
         setTimeout(() => {
-            dispatch(setSearchList(wishlistItems));
+            dispatch(setSearchList(wishlistItems as Wishlist[]));
             dispatch(updateTotalResults(wishlistItems.length));
         }, 550);
     }
 
     return (
-        <div className="w-full h-[80px] bg-slate-900  flex flex-row justify-between place-items-center px-5 py-3">
-            <nav className="flex flex-row place-items-center gap-2">
-                {wishlistItems && wishlistItems.length > 0 ?
-                    <button className="bg-transparent hover:bg-slate-600 p-2 rounded-lg" onClick={handleClick}>
-                        <img className="w-[28px] bg-transparent" src={Bookmark} alt="" /> 
+        <div className="w-full h-[80px] bg-slate-900 flex flex-row justify-between place-items-center px-5 py-3">
+            <nav className="flex flex-row place-items-center gap-2 w-full">
+                {wishlistItems && wishlistItems.length > 0 &&
+                    <button className="bg-transparent hover:bg-slate-600 p-2 rounded-lg shrink-0" onClick={handleClick}>
+                        <BookmarkIcon size="28" />
                     </button>
-                :
-                    <></>
                 }
                 <Input shouldAutoFocus />
             </nav>

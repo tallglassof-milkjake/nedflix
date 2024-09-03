@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store/store";
 
-interface Wishlist {
-    items: Record<string, any>;
-}
-
 const initialState: Wishlist = {
     items: JSON.parse(localStorage.getItem('wishlist') || '[]'),
 };
