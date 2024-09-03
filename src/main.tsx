@@ -8,7 +8,7 @@ import { loadWishlist } from './store/slices/wishlistSlice';
 
 const preloadedWishlist = store.getState().wishlist.items;
 if (preloadedWishlist) {
-    store.dispatch(loadWishlist(preloadedWishlist));
+    store.dispatch(loadWishlist());
 }
 
 createRoot(document.getElementById('root')!).render(

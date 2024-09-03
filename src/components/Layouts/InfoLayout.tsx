@@ -5,7 +5,7 @@ import { addToWishlist, removeFromWishlist } from '../../store/slices/wishlistSl
 import { fetchSeasons } from "../../store/slices/omdbSlice";
 
 // Icons & Components
-import ChevronLeft from '../../assets/svgs/chevron-left.svg';
+import ChevronLeftIcon from '../Icons/ChevronLeft';
 import Bookmark from '../Icons/Bookmark';
 import EpisodeCard from "../Cards/EpisodeCard";
 
@@ -32,7 +32,7 @@ const InfoLayout: React.FC<Props> = ({onClearSelected}) => {
 
     useEffect(() => {
         if (selectedResult && selectedResult.Type === 'series') {
-            dispatch(fetchSeasons({/* episode: undefined, season: selectedResult.totalSeasons */}))
+            dispatch(fetchSeasons({}))
         }
     }, [selectedResult]);
     return (
@@ -42,7 +42,7 @@ const InfoLayout: React.FC<Props> = ({onClearSelected}) => {
                 ?
                     <>
                         <button className="absolute w-[40px] h-[40px] lg:hidden flex place-items-center justify-center top-4 left-4 px-1 py-1 border border-gray-600 rounded-full transition-all shadow-md hover:shadow-lg hover:bg-gray-100" onClick={onClearSelected}>
-                            <img src={ChevronLeft} alt="" />
+                            <ChevronLeftIcon stroke="#213547" size="24" />
                         </button>
 
                         {/* Movie card - TODO: componentise */}

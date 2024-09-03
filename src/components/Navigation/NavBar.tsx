@@ -3,7 +3,6 @@ import Input from "../Form/Input";
 import Dropdown from "../Common/Dropdown";
 import TypeFilter from "../Form/TypeFilter";
 import Slider from '../Form/Slider';
-import Bookmark from '../../assets/svgs/bookmark.svg';
 import BookmarkIcon from '../Icons/Bookmark';
 
 import { useSelector, useDispatch } from "react-redux";
@@ -16,7 +15,6 @@ const NavBar: React.FC = () => {
     const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
 
     const handleClick = () => {
-        // clear search list
         dispatch(resetSearch());
         setTimeout(() => {
             dispatch(setSearchList(wishlistItems as Wishlist[]));

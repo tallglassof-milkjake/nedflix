@@ -5,15 +5,11 @@ import BookmarkIcon from '../Icons/Bookmark';
 
 interface Props {
     movie: Record<string, string | string[]>
-    poster: string;
-    title: string;
-    year: string;
     id: string;
-    type: string;
     handleClick: () => void;
 }
 
-const SearchResult: React.FC<Props> = ({ movie, poster, title, year, id, type, handleClick }) => {
+const SearchResult: React.FC<Props> = ({ movie, id, handleClick }) => {
     const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
     
     const {

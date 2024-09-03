@@ -29,7 +29,7 @@ const SearchResults: React.FC<Props> = ({results, totalResults, loading, handleC
                         !noResults ?
                         <ul className="flex flex-col">
                             {results.map((movie: Record<string, string>, index: number) => (
-                                <SearchResult key={index} movie={movie} id={movie.imdbID} poster={movie.Poster} title={movie.Title} year={movie.Year || new Date(movie.Released).toLocaleDateString()} type={movie.Type} handleClick={() => handleClick(movie)} />
+                                <SearchResult key={index} movie={movie} id={movie.imdbID} handleClick={() => handleClick(movie)} />
                             ))}
                         </ul>
                         :

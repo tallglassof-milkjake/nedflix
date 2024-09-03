@@ -9,7 +9,7 @@ interface Props {
     title: string;
 }
 
-const EpisodeCard: React.FC<Props> = ({ poster, season, title }) => {
+const EpisodeCard: React.FC<Props> = ({ poster, season }) => {
     const dispatch = useDispatch<AppDispatch>();
     const searchResultsSeasons = useSelector((state: RootState) => state.omdb.selectedResultSeasons);
 

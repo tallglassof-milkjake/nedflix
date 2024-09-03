@@ -8,10 +8,9 @@ import { setYearRange, searchMovies } from '../../store/slices/omdbSlice';
 interface YearRangeSliderProps {
     minYear: number;
     maxYear: number;
-    currentQuery: [number, number];
 }
 
-const YearRangeSlider: React.FC<YearRangeSliderProps> = ({ minYear, maxYear, currentQuery }) => {
+const YearRangeSlider: React.FC<YearRangeSliderProps> = ({ minYear, maxYear }) => {
     const dispatch = useDispatch<AppDispatch>();
     const [yearRange, setYearRangeState] = useState<[number, number]>([minYear, maxYear]);
     const storeQuery = useSelector((state: RootState) => state.omdb.query);

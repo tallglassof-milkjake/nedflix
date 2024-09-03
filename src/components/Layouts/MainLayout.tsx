@@ -23,7 +23,6 @@ const MainLayout: React.FC = () => {
     const query = useSelector((state: RootState) => state.omdb.query);
     const sort = useSelector((state: RootState) => state.omdb.sort);
     const storeError = useSelector((state: RootState) => state.omdb.error);
-    const selectedResult = useSelector((state: RootState) => state.omdb.selectedResult);
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
 

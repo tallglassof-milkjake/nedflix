@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
 
 import Slider from '../Form/Slider';
 import TypeFilter from '../Form/TypeFilter';
 import FilterIcon from "../Icons/Filter";
 
 const Dropdown: React.FC = () => {
-    const filter = useSelector((state: RootState) => state.omdb.filter);
-    const currentYearRange = useSelector((state: RootState) => state.omdb.yearRange);
-    
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
@@ -42,7 +37,7 @@ const Dropdown: React.FC = () => {
                 &&
                 <div className="absolute z-50 w-full h-full top-[80px] left-0 right-0 bg-black/75 backdrop-blur">
                     <div className="flex flex-col bg-slate-900 border-t border-slate-700 px-4 py-6">
-                        <Slider minYear={1970} maxYear={new Date().getFullYear()} currentQuery={currentYearRange} />
+                        <Slider minYear={1970} maxYear={new Date().getFullYear()} />
                         <TypeFilter />
                     </div>
                 </div>

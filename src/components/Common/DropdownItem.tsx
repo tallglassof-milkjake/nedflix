@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter, searchMovies } from '../../store/slices/omdbSlice';
 import { RootState, AppDispatch } from '../../store/store';
@@ -49,7 +49,7 @@ const DropdownItem: React.FC<Props> = ({dropdownItem}) => {
                     ?
                         <RadioSelector item={dropdownItem} currentFilter={currentFilter} handleSelect={(e) => handleSelect(e)} />
                     :
-                        <Slider minYear={1970} maxYear={new Date().getFullYear()} currentQuery={currentYearRange} />
+                        <Slider minYear={1970} maxYear={new Date().getFullYear()} />
                 }
             </div>
         </>
